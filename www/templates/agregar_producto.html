@@ -1,0 +1,43 @@
+<ion-modal-view class="fondoB">
+    <ion-header-bar class="estilo-modal2">
+      <h1 class="title">
+      	Agregar Producto al Inventario
+      </h1>
+	  <div class="buttons">
+	    <button class="button button-clear" ng-click="closeModal()">
+	    <i class="ion ion-close"></i>
+	    </button>
+	  </div>      
+    </ion-header-bar>
+<ion-content>
+	<div class="list">
+	<form>
+	  <label class="item item-input">
+	   	<i class="icon ion-cube placeholder-icon"></i>
+	    <input type="text" placeholder="Nombre" ng-model="producto.nombre" required>
+	  </label>
+	  <label class="item item-input">
+	  	<i class="icon ion-ios-pricetag-outline placeholder-icon"></i>
+	    <input type="text" placeholder="Referencia" ng-model="producto.referencia" required>
+	  </label>
+	  <label class="item item-input">
+	  	<i class="icon ion-ios-browsers-outline placeholder-icon"></i>
+	    <input type="number" placeholder="Cantidad" ng-model="producto.cantidad" required>
+	  </label>	 
+	  	<div align="center"><h2>{{producto.precio | currency}}</h2></div>
+	  <label class="item item-input">
+	  	<i class="icon ion-social-usd placeholder-icon"></i>
+	    <input type="number" placeholder="Precio por unidad" ng-model="producto.precio" required>
+	  </label>	 	   
+	  <label class="item item-input">
+	    <textarea placeholder="Detalles" ng-model="producto.detalles"></textarea>
+	  </label>		
+		<button type="submit" class="button button-full button-positive" ng-click="addProducto(producto)">
+		  Guardar
+		</button>	  
+	</form>
+	
+
+    </div>
+</ion-content>
+</ion-modal-view>

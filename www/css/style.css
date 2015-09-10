@@ -1,0 +1,26 @@
+/* Empty. Add your own CSS if you like */
+*{
+	font-family: 'Open Sans Condensed', sans-serif !important;
+}
+
+.item-input-wrapper{
+	border: 1px solid #ccc;
+	border-radius: 0px;
+}
+.bar.bar-dark, .item-complex{
+	background-color: #2b6c97 !important;
+}
+
+
+.estilo-modal2{
+	background-color: #2b6c97 !important;
+}
+.estilo-modal2 h1{
+    color: #FFF !important;
+}
+
+.button.button-positive {
+    border-color: #2B6C97;
+    background-color: #2B6C97;
+    color: #fff;
+}
