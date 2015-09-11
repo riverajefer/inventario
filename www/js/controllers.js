@@ -1,33 +1,42 @@
 angular.module('starter.controllers', [])
 
-.controller('ProductosCtrl', function($scope, $state, $ionicModal, Productos, $ionicActionSheet, $firebaseArray, $ionicListDelegate) {
-
+.controller('ProductosCtrl', function($scope, $state, $ionicModal, Fotos, $cordovaCamera, Productos, $ionicActionSheet, $firebaseArray, $ionicListDelegate) {
 
   $scope.showActionsheet = function(producto) {
-    console.log(producto)
     
     $ionicActionSheet.show({
       titleText: 'Producto: '+producto.nombre,
       buttons: [
         { text: '<i class="icon ion-ios-arrow-right"></i> Detalles' },
+        { text: '<i class="icon ion-ios-camera"></i>Tomar Foto' },
+        { text: '<i class="icon ion-images"></i>Ver Fotos' },
         { text: '<i class="icon ion-ios-compose-outline"></i> Editar' },
         { text: '<i class="icon ion-ios-trash-outline"></i> Eliminar' },
+
       ],
       destructiveText: '<i class="icon ion-ios-close-outline"></i> Cancelar',
       cancelText: '<i class="icon ion-ios-close-outline"></i> Cancelar',
+
       cancel: function() {
         console.log('CANCELLED');
       },
+      
       buttonClicked: function(index) {
-        console.log('BUTTON CLICKED', index);
+
         switch(index) {
             case 0:
-                $state.go('app.producto', { id: producto.$id });
+                $state.go('app.producto', { productoId: producto.$id });
                 break;
             case 1:
-                $state.go('editar', { id: producto.$id });
+                $scope.tomarFoto(producto.$id);
                 break;
             case 2:
+                $scope.verFotos(producto.$id);
+                break;                
+            case 3:
+                $state.go('editar', { id: producto.$id });
+                break;
+            case 4:
                 $scope.delete(producto.$id);
                 break;
             default:
@@ -36,13 +45,11 @@ angular.module('starter.controllers', [])
         return true;
       },
       destructiveButtonClicked: function() {
-        console.log('DESTRUCT');
         return true;
       }
     });
   };
     
-
 
    $scope.productos = Productos;
 
@@ -59,7 +66,39 @@ angular.module('starter.controllers', [])
 
   $scope.openModalAddProducto = function(){
     $scope.modal.show();
+
   };
+
+$scope.verFotos = function(id) {
+  $state.go('foto', { id: id });
+}
+
+$scope.tomarFoto = function(id) {
+  var options = {
+      quality : 75,
+      destinationType : Camera.DestinationType.DATA_URL,
+      sourceType : Camera.PictureSourceType.CAMERA,
+      allowEdit : true,
+      encodingType: Camera.EncodingType.JPEG,
+      popoverOptions: CameraPopoverOptions,
+      targetWidth: 500,
+      targetHeight: 500,
+      saveToPhotoAlbum: false
+  };
+  $cordovaCamera.getPicture(options).then(function(imageData) {
+    console.log('foto tomada')
+    var ft = new Firebase('https://appinventario.firebaseio.com/productos/'+id+'/foto');
+    $scope.fotos = $firebaseArray(ft);
+    //alert(imageData)
+      $scope.fotos.$add({image: imageData}).then(function() {
+          alert("Image has been uploaded");
+          $state.go('foto', { id: id });
+      });
+  }, function(error) {
+      console.error(error);
+  });
+}
+
 
  $scope.addProducto = function(producto) {
 
@@ -71,6 +110,7 @@ angular.module('starter.controllers', [])
           "precio": producto.precio,          
           "detalles": producto.detalles,
         });
+        $scope.producto = '';
         $scope.modal.hide();
     }
   };
@@ -90,6 +130,7 @@ $scope.delete = function(data){
 
 .controller('ProductoCtrl', function($scope, $stateParams, $ionicNavBarDelegate, $ionicPopover, Productos) {
   
+  console.log($stateParams)
    function findbyid(id){
     for (var i = 0; i < Productos.length; i++) {
       if(Productos[i].$id == id){
@@ -121,7 +162,7 @@ $scope.delete = function(data){
 
 $scope.modificarProducto = function(data){
 
-  var fredRef = new Firebase('https://appinventario.firebaseio.com/productos/' + data.$id);
+  var fredRef = new Firebase('https://appinventario.firebaseio.com/productos/'+data.$id);
   fredRef.update({ 
     nombre: data.nombre, 
     cantidad: data.cantidad,
@@ -135,7 +176,17 @@ $scope.modificarProducto = function(data){
 }
 
 
+})
+.controller('ProductoFotosCtrl', function($scope, $stateParams, $state, $firebaseArray, $ionicListDelegate, $ionicNavBarDelegate, $ionicPopover, Productos) {
+  $scope.fotos = [];
+  var id = $stateParams.id;
+  var ft = new Firebase('https://appinventario.firebaseio.com/productos/'+id);
+  var syn = $firebaseArray(ft.child("foto"));
+  $scope.fotos = syn;
+
 });
+
+
 
 
 

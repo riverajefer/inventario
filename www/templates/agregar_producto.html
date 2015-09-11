@@ -31,12 +31,17 @@
 	  </label>	 	   
 	  <label class="item item-input">
 	    <textarea placeholder="Detalles" ng-model="producto.detalles"></textarea>
-	  </label>		
-		<button type="submit" class="button button-full button-positive" ng-click="addProducto(producto)">
+	  </label>	
+		<button class="button button-full  button-outline button-positive" ng-click="foto()">
+		  <i class="icon ion-ios-camera"></i> Foto 
+		</button>	    
+		<button type="submit" class="button  button-full button-positive" ng-click="addProducto(producto)">
 		  Guardar
 		</button>	  
 	</form>
 	
+
+
 
     </div>
 </ion-content>

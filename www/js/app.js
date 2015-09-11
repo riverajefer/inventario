@@ -3,6 +3,7 @@ angular.module('starter', [
   'starter.services', 
   'starter.controllers', 
   'firebase',
+  'ngCordova',
   ])
 
 .run(function($ionicPlatform) {
@@ -62,7 +63,22 @@ angular.module('starter', [
       }
     }
   })
-
+  .state('foto', {
+    url: '/producto-fotos/:id',
+    parent: "app",
+    cache: true,
+     resolve:{
+        id: ['$stateParams', function($stateParams){
+            return $stateParams.id;
+        }]
+     },    
+    views:{
+      'menuContent':{
+        templateUrl: 'templates/producto_fotos.html',
+        controller: 'ProductoFotosCtrl'
+      }
+    }
+  })
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/productos');
